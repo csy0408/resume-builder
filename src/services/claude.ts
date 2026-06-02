@@ -1,22 +1,55 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-function getClient(): Anthropic | null {
-  const key = localStorage.getItem('resume-builder-api-key');
-  if (!key) return null;
-  return new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
+type AiEngine = 'claude' | 'deepseek';
+
+function getEngine(): AiEngine {
+  return (localStorage.getItem('resume-builder-ai-engine') as AiEngine) || 'deepseek';
+}
+
+function getKey(): string {
+  const engine = getEngine();
+  const key =
+    engine === 'deepseek'
+      ? localStorage.getItem('resume-builder-deepseek-key')
+      : localStorage.getItem('resume-builder-api-key');
+  if (!key) throw new Error(`请先在设置页面配置 ${engine === 'deepseek' ? 'DeepSeek' : 'Claude'} API Key`);
+  return key;
 }
 
 async function chat(system: string, user: string, maxTokens = 4096): Promise<string> {
-  const client = getClient();
-  if (!client) throw new Error('API Key 未设置，请在设置页面配置 Claude API Key');
+  const engine = getEngine();
+  const key = getKey();
+
+  if (engine === 'deepseek') {
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        max_tokens: maxTokens,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user },
+        ],
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: { message: res.statusText } }));
+      throw new Error((err as { error?: { message?: string } }).error?.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+
+  // Claude
+  const client = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
   const msg = await client.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: maxTokens,
     system,
     messages: [{ role: 'user', content: user }],
   });
-  const text = msg.content[0]?.type === 'text' ? msg.content[0].text : '';
-  return text;
+  return msg.content[0]?.type === 'text' ? msg.content[0].text : '';
 }
 
 // ---- Project Scanner ----

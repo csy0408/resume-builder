@@ -9,7 +9,7 @@ import JDInput from './pages/JDInput';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/resume-builder">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route element={<Layout />}>
