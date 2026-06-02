@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useProfileStore } from '../../store/profileStore';
 import ExperienceForm from './ExperienceForm';
 import VariantEditor from './VariantEditor';
@@ -12,12 +13,20 @@ export default function ExperienceList() {
     <section className="mt-8">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-[var(--color-primary-dark)]">项目经历</h3>
-        <button
-          onClick={() => { setEditingId(null); setShowForm(true); }}
-          className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90"
-        >
-          + 添加经历
-        </button>
+        <div className="flex gap-2">
+          <Link
+            to="/profile/scan"
+            className="px-4 py-2 border border-[var(--color-primary)] text-[var(--color-primary)] text-sm rounded-lg hover:bg-[var(--color-bg)]"
+          >
+            AI 扫描
+          </Link>
+          <button
+            onClick={() => { setEditingId(null); setShowForm(true); }}
+            className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90"
+          >
+            + 添加经历
+          </button>
+        </div>
       </div>
 
       {showForm && (
