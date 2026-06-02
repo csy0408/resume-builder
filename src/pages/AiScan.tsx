@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { scanProject, parseResume } from '../services/claude';
 import { useProfileStore } from '../store/profileStore';
@@ -17,6 +17,18 @@ export default function AiScan() {
   const { addExperience } = useProfileStore();
   const [fileList, setFileList] = useState<{ name: string; content: string }[]>([]);
   const [scanning, setScanning] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval>>();
+
+  useEffect(() => {
+    if (scanning) {
+      setElapsed(0);
+      timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
+    } else {
+      clearInterval(timerRef.current);
+    }
+    return () => clearInterval(timerRef.current);
+  }, [scanning]);
   const [results, setResults] = useState<ScanResult[]>([]);
   const [checked, setChecked] = useState<Set<number>>(new Set());
   const [error, setError] = useState('');
@@ -184,7 +196,7 @@ export default function AiScan() {
           disabled={scanning || fileList.length === 0}
           className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {scanning ? 'AI 分析中...' : '开始扫描'}
+          {scanning ? `AI 分析中... ${elapsed}s` : '🔍 开始扫描'}
         </button>
 
         {error && (

@@ -16,7 +16,7 @@ function getKey(): string {
   return key;
 }
 
-async function chat(system: string, user: string, maxTokens = 4096): Promise<string> {
+async function chat(system: string, user: string, maxTokens = 2048): Promise<string> {
   const engine = getEngine();
   const key = getKey();
 
