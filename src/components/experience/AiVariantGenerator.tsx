@@ -34,7 +34,7 @@ export default function AiVariantGenerator({ experience, onClose }: Props) {
   };
 
   const toggleCheck = (i: number) => {
-    setChecked(prev => { const next = new Set(prev); next.has(i) ? next.delete(i) : next.add(i); return next; });
+    setChecked(prev => { const next = new Set(prev); if (next.has(i)) next.delete(i); else next.add(i); return next; });
   };
 
   const handleImport = () => {

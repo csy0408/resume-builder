@@ -40,7 +40,7 @@ export default function AiScan() {
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
-          text += content.items.map((item: { str?: string }) => item.str || '').join(' ') + '\n';
+          text += content.items.map((item: unknown) => (item as { str?: string }).str || '').join(' ') + '\n';
         }
       } else if (file.name.endsWith('.docx')) {
         const mammoth = await import('mammoth');
@@ -105,7 +105,7 @@ export default function AiScan() {
   const toggleCheck = (i: number) => {
     setChecked((prev) => {
       const next = new Set(prev);
-      next.has(i) ? next.delete(i) : next.add(i);
+      if (next.has(i)) next.delete(i); else next.add(i);
       return next;
     });
   };

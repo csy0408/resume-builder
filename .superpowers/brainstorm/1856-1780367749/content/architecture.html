@@ -1,0 +1,68 @@
+<h2>简历制作平台 — 技术架构方案</h2>
+<p class="subtitle">公开部署 + 开源 + AI 驱动 + 纯前端（无需后端）</p>
+
+<div class="section">
+  <h3>架构概览</h3>
+  <div class="mockup">
+    <div class="mockup-header">纯前端 SPA → GitHub Pages 部署，用户自带 API Key</div>
+    <div class="mockup-body" style="padding:20px;font-size:13px;line-height:2;">
+      <div style="display:flex;gap:16px;">
+        <div style="flex:1;background:#E8F4FD;border-radius:8px;padding:14px;">
+          <strong style="color:#1B3A5C;">📥 经历输入</strong><br>
+          ▪ AI 自动扫描项目<br>
+          ▪ 手动填写表单<br>
+          ▪ JSON 导入
+        </div>
+        <div style="flex:1;background:#E8F4FD;border-radius:8px;padding:14px;">
+          <strong style="color:#1B3A5C;">🧠 JD 匹配引擎</strong><br>
+          ▪ Claude API<br>
+          ▪ 语义匹配<br>
+          ▪ 生成定制简历
+        </div>
+        <div style="flex:1;background:#E8F4FD;border-radius:8px;padding:14px;">
+          <strong style="color:#1B3A5C;">📄 简历输出</strong><br>
+          ▪ 模板选择 & 编辑<br>
+          ▪ 导出 PDF / Word<br>
+          ▪ JSON 备份
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:14px;color:#6B7B8D;font-size:11px;">
+        localStorage（默认）⇄ JSON 文件（导出备份 / 跨设备同步）
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>两种实现路径</h3>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>React + Vite 全栈前端</h3>
+      <p>组件化开发，生态丰富。简历编辑器用富文本库（如 TipTap），PDF 用 jsPDF，Word 用 docx.js。开发效率高，适合复杂交互。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>纯 HTML/CSS/JS（零依赖）</h3>
+      <p>不依赖框架，体积小加载快。所有功能从零手写，部署简单。但复杂 UI（编辑器、拖拽）开发工作量大。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>我的推荐</h3>
+  <p><strong>推荐 A — React + Vite</strong>，理由：</p>
+  <ul>
+    <li>开源社区最活跃，方便其他人参与贡献</li>
+    <li>GitHub Pages 部署只需 <code>npm run build</code> + GitHub Actions</li>
+    <li>简历编辑器、模板切换等交互复杂，React 组件化天然适合</li>
+    <li>Tiptap、jsPDF、docx.js 等库成熟稳定</li>
+    <li>Claude API 调用在前端直接用 Anthropic SDK</li>
+  </ul>
+  <p style="color:#6B7B8D;font-size:13px;">用户需要提供自己的 Claude API Key（或平台提供默认 Key + 用量限制）</p>
+</div>

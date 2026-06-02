@@ -1,0 +1,193 @@
+<h2>需求全景 — 简历制作平台 v1.0</h2>
+<p class="subtitle">点击选项表达你的偏好，有问题我会追问</p>
+
+<!-- ==================== 已确认需求 ==================== -->
+<div class="section">
+  <h3>✅ 已确认的核心需求</h3>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+
+    <div style="background:#fff;border:1px solid #E2E6EA;border-radius:8px;padding:16px;">
+      <div class="label">🏗️ 技术架构</div>
+      <ul style="font-size:13px;margin:8px 0 0;padding-left:18px;color:#333;">
+        <li>React + Vite 纯前端 SPA</li>
+        <li>GitHub Pages 部署，开源</li>
+        <li>localStorage 默认存储</li>
+        <li>JSON 导出/导入备份</li>
+        <li>用户自带 Claude API Key</li>
+      </ul>
+    </div>
+
+    <div style="background:#fff;border:1px solid #E2E6EA;border-radius:8px;padding:16px;">
+      <div class="label">📥 三种信息录入路径</div>
+      <ul style="font-size:13px;margin:8px 0 0;padding-left:18px;color:#333;">
+        <li><strong>AI 自动扫描</strong>：读取项目文件提取经历</li>
+        <li><strong>上传简历解析</strong>：PDF/Word → AI 提取</li>
+        <li><strong>手动填写</strong>：表单逐项录入</li>
+        <li>所有信息可人工校验修改</li>
+      </ul>
+    </div>
+
+    <div style="background:#fff;border:1px solid #E2E6EA;border-radius:8px;padding:16px;">
+      <div class="label">🧠 JD 智能匹配</div>
+      <ul style="font-size:13px;margin:8px 0 0;padding-left:18px;color:#333;">
+        <li>Claude API 语义匹配</li>
+        <li>解析岗位JD → 匹配经历</li>
+        <li>自动生成定制简历</li>
+        <li>🆕 <strong>同经历多版本描述</strong></li>
+      </ul>
+    </div>
+
+    <div style="background:#fff;border:1px solid #E2E6EA;border-radius:8px;padding:16px;">
+      <div class="label">📄 简历生成 & 导出</div>
+      <ul style="font-size:13px;margin:8px 0 0;padding-left:18px;color:#333;">
+        <li>3 套模板（经典/双栏/混合）</li>
+        <li>在线可视化编辑</li>
+        <li>导出 PDF 格式</li>
+        <li>导出 Word (.docx) 格式</li>
+        <li>淡蓝色主题，可切换颜色</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== 新功能详解 ==================== -->
+<div class="section">
+  <h3>🆕 核心新特性：「经历变体」— 同一经历，不同侧重点</h3>
+
+  <div class="mockup">
+    <div class="mockup-header">示例：ANC 轴流风机项目的一条经历，三种岗位变体</div>
+    <div class="mockup-body" style="padding:16px;font-size:13px;">
+
+      <div style="display:flex;gap:12px;">
+        <div style="flex:1;background:#fff;border-radius:6px;padding:12px;border-left:4px solid #E67E22;">
+          <strong>投递：信号处理工程师</strong>
+          <p style="color:#555;margin:6px 0 0;font-size:12px;">
+            "设计并实现了基于特征值均衡的窄带主动噪声控制系统（EE-PNANC），在 Fs=48000Hz 条件下实现 8 通道并行 FxLMS 自适应滤波，成功将条件数从 1000 降至 1，显著改善收敛均匀性。"
+          </p>
+          <div style="font-size:10px;color:#2E86AB;margin-top:6px;">🏷️ 关键词：自适应滤波 · FxLMS · 信号处理 · 实时系统</div>
+        </div>
+
+        <div style="flex:1;background:#fff;border-radius:6px;padding:12px;border-left:4px solid #27AE60;">
+          <strong>投递：MATLAB 开发工程师</strong>
+          <p style="color:#555;margin:6px 0 0;font-size:12px;">
+            "基于 MATLAB 构建了完整的 ANC 仿真与实时控制系统，包含 5 种算法实现、Wiener-Hopf 次级路径辨识、Welch PSD 频谱分析模块。使用 Audio Toolbox 实现 UMC202HD 实时 I/O，支持双麦克风自适应频率跟踪。"
+          </p>
+          <div style="font-size:10px;color:#2E86AB;margin-top:6px;">🏷️ 关键词：MATLAB · 算法实现 · 音频处理 · 实验验证</div>
+        </div>
+
+        <div style="flex:1;background:#fff;border-radius:6px;padding:12px;border-left:4px solid #2E86AB;">
+          <strong>投递：嵌入式软件工程师</strong>
+          <p style="color:#555;margin:6px 0 0;font-size:12px;">
+            "提出并验证了低复杂度 LC-EE-PNANC 算法，复杂度降低 98.4%，为后续在 Cortex-M4 等嵌入式平台上的实时部署提供了理论基础和仿真验证。具备从浮点仿真到定点量化的完整实现经验。"
+          </p>
+          <div style="font-size:10px;color:#2E86AB;margin-top:6px;">🏷️ 关键词：嵌入式 · 算法优化 · 定点量化 · 复杂度分析</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:#555;margin-top:10px;">
+    <strong>实现方式</strong>：每条经历存储一个「基础描述」+ N 个「变体描述」，每个变体关联一组目标标签（如"信号处理""嵌入式""管理岗"）。匹配 JD 时，AI 自动选择最相关的变体，或生成新的变体。
+  </p>
+</div>
+
+<!-- ==================== 头脑风暴补充 ==================== -->
+<div class="section">
+  <h3>💡 头脑风暴 — 可能有价值的补充功能</h3>
+  <p class="subtitle">以下是我基于需求推演出的补充建议，请逐条确认是否纳入</p>
+
+  <div class="options" data-multiselect>
+
+    <div class="option" data-choice="s1" onclick="toggleSelect(this)">
+      <div class="letter">1</div>
+      <div class="content">
+        <h3>JD 解析器 — 粘贴岗位链接自动解析</h3>
+        <p>用户粘贴招聘网站的 URL 或 JD 全文，AI 自动提取：技术栈、年限要求、软技能需求、岗位关键词。节省手动分析 JD 的时间。</p>
+        <p style="font-size:12px;color:#6B7B8D;">建议纳入 v1.0，JD 匹配的前置步骤</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="s2" onclick="toggleSelect(this)">
+      <div class="letter">2</div>
+      <div class="content">
+        <h3>匹配度打分 + 差距分析</h3>
+        <p>AI 对比简历与 JD，给出匹配度评分（如 85%），并列出"你的经历中缺失的关键词/技能"，方便针对性地补充或调整描述。</p>
+        <p style="font-size:12px;color:#6B7B8D;">增强匹配透明度，用户知道为什么这样匹配</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="s3" onclick="toggleSelect(this)">
+      <div class="letter">3</div>
+      <div class="content">
+        <h3>简历版本历史 & 对比</h3>
+        <p>每次生成/修改的简历自动保存版本，用户可以对比不同版本（如"投腾讯版"vs"投字节版"）的差异，查看哪些经历描述被调整了。</p>
+        <p style="font-size:12px;color:#6B7B8D;">v1.1 可选，版本管理是自然延伸</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="s4" onclick="toggleSelect(this)">
+      <div class="letter">4</div>
+      <div class="content">
+        <h3>一键切换语言（中英文简历）</h3>
+        <p>每个经历可以同时维护中英文版本，JD 匹配时 AI 自动生成目标语言的简历。投外企用英文版，投国内用中文版。</p>
+        <p style="font-size:12px;color:#6B7B8D;">对投外企的用户很有价值</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="s5" onclick="toggleSelect(this)">
+      <div class="letter">5</div>
+      <div class="content">
+        <h3>AI 写作助手 — 润色 & 扩写</h3>
+        <p>选中任意描述文字，AI 帮你：润色语句、扩写成果（STAR 法则）、缩写控制字数、调整语气（技术型/管理型/学术型）。</p>
+        <p style="font-size:12px;color:#6B7B8D;">让简历表述更专业</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="s6" onclick="toggleSelect(this)">
+      <div class="letter">6</div>
+      <div class="content">
+        <h3>A/B 简历 — 同时生成两份对比</h3>
+        <p>同一份 JD，AI 生成两份侧重点不同的简历（如 A 强调技术深度，B 强调项目领导力），用户选择更合适的版本。</p>
+        <p style="font-size:12px;color:#6B7B8D;">充分利用 AI 生成能力</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== 待澄清问题 ==================== -->
+<div class="section">
+  <h3>❓ 需要你确认的问题</h3>
+
+  <div style="background:#FFF3CD;border-radius:8px;padding:16px;">
+
+    <p style="margin:0 0 10px;"><strong>Q1: 照片处理？</strong></p>
+    <div class="options" style="margin-bottom:14px;">
+      <div class="option" data-choice="q1a" onclick="toggleSelect(this)">
+        <div class="letter">A</div><div class="content">支持上传照片，直接嵌入简历</div>
+      </div>
+      <div class="option" data-choice="q1b" onclick="toggleSelect(this)">
+        <div class="letter">B</div><div class="content">不需要照片（互联网行业通常不要求）</div>
+      </div>
+      <div class="option" data-choice="q1c" onclick="toggleSelect(this)">
+        <div class="letter">C</div><div class="content">可选，模板中照片区域可开关</div>
+      </div>
+    </div>
+
+    <p style="margin:0 0 10px;"><strong>Q2: API Key 怎么处理？</strong></p>
+    <div class="options">
+      <div class="option" data-choice="q2a" onclick="toggleSelect(this)">
+        <div class="letter">A</div><div class="content">每个用户自己填 API Key（完全免费运营，推荐）</div>
+      </div>
+      <div class="option" data-choice="q2b" onclick="toggleSelect(this)">
+        <div class="letter">B</div><div class="content">平台提供默认 Key + 每日免费额度限制</div>
+      </div>
+      <div class="option" data-choice="q2c" onclick="toggleSelect(this)">
+        <div class="letter">C</div><div class="content">两者都支持，默认用户自带，也可切换平台Key</div>
+      </div>
+    </div>
+
+  </div>
+</div>

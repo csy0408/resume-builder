@@ -1,0 +1,91 @@
+<h2>数据流总览 — 三种信息入口 + 人工校验</h2>
+<p class="subtitle">所有 AI 提取的信息均可人工修改确认</p>
+
+<div class="section">
+  <h3>核心数据模型</h3>
+  <div class="mockup">
+    <div class="mockup-header">用户 Profile（所有信息的统一存储）</div>
+    <div class="mockup-body" style="padding:20px;font-size:13px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:#fff;border:1px solid #E2E6EA;border-radius:6px;padding:12px;">
+          <div class="label">基本信息</div>
+          <div style="color:#1B3A5C;">姓名 · 照片 · 手机 · 邮箱 · 所在地 · 个人网站/GitHub</div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2E6EA;border-radius:6px;padding:12px;">
+          <div class="label">教育经历</div>
+          <div style="color:#1B3A5C;">学校 · 专业 · 学历 · 时间 · GPA · 主修课程</div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2E6EA;border-radius:6px;padding:12px;">
+          <div class="label">项目/工作经历</div>
+          <div style="color:#1B3A5C;">项目名 · 角色 · 时间 · 技术栈 · 成果描述 · 来源标记(AI扫描/手动/简历解析)</div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2E6EA;border-radius:6px;padding:12px;">
+          <div class="label">技能 & 其他</div>
+          <div style="color:#1B3A5C;">编程语言 · 工具 · 证书 · 语言能力 · 自我评价</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>三种信息录入路径 → 汇聚到统一 Profile</h3>
+
+  <div style="display:flex;gap:14px;margin-top:10px;">
+    <!-- 路径1 -->
+    <div style="flex:1;background:#E8F4FD;border-radius:8px;padding:16px;border-top:4px solid #2E86AB;">
+      <strong>🔍 路径一：AI 自动扫描</strong>
+      <p style="font-size:13px;color:#444;margin:8px 0;">
+        用户告诉 AI 项目路径 → AI 读取 CLAUDE.md/代码/Git历史 → 生成结构化经历条目
+      </p>
+      <div class="placeholder" style="font-size:12px;">适用：已有项目代码的开发者</div>
+    </div>
+
+    <!-- 路径2 -->
+    <div style="flex:1;background:#E8F4FD;border-radius:8px;padding:16px;border-top:4px solid #27AE60;">
+      <strong>📄 路径二：上传已有简历</strong>
+      <p style="font-size:13px;color:#444;margin:8px 0;">
+        上传 PDF/Word → AI 解析 → 自动填充到对应字段（基本信息/经历/技能/教育）
+      </p>
+      <div class="placeholder" style="font-size:12px;">适用：已有现成简历，快速导入</div>
+    </div>
+
+    <!-- 路径3 -->
+    <div style="flex:1;background:#E8F4FD;border-radius:8px;padding:16px;border-top:4px solid #E67E22;">
+      <strong>✏️ 路径三：手动填写</strong>
+      <p style="font-size:13px;color:#444;margin:8px 0;">
+        表单逐项填写，支持增删改，完全手动控制
+      </p>
+      <div class="placeholder" style="font-size:12px;">适用：精确控制每条信息</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>关键流程：上传简历 → AI解析 → 人工校验</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:18px;text-align:center;font-size:14px;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
+        <button class="mock-button" style="background:#2E86AB;">📤 上传 PDF/Word</button>
+        <span style="font-size:20px;">→</span>
+        <span style="background:#1B3A5C;color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;">🤖 AI 解析</span>
+        <span style="font-size:20px;">→</span>
+        <span style="background:#E8F4FD;padding:6px 14px;border-radius:6px;font-size:12px;">自动填充表单</span>
+        <span style="font-size:20px;">→</span>
+        <span style="background:#FFF3CD;padding:6px 14px;border-radius:6px;font-size:12px;">👤 用户校验修改</span>
+        <span style="font-size:20px;">→</span>
+        <span style="background:#D4EDDA;padding:6px 14px;border-radius:20px;font-size:12px;">✅ 确认入库</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>校验机制</h3>
+  <ul style="font-size:14px;">
+    <li><strong>AI 提取的所有字段</strong>旁边显示"🤖 AI 提取"标记 + <span style="color:#E67E22;">编辑按钮</span></li>
+    <li>用户可逐项修改、删除、或完全重写</li>
+    <li>修改后的字段标记变为"✏️ 已确认"，不再被 AI 覆盖</li>
+    <li>支持「一键重置」恢复 AI 原始提取结果</li>
+  </ul>
+</div>

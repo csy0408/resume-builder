@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useProfileStore } from '../store/profileStore';
 import { exportAsJson, importFromJson } from '../utils/storage';
 import type { UserProfile } from '../types/profile';
@@ -6,13 +6,8 @@ import type { UserProfile } from '../types/profile';
 export default function Settings() {
   const { profile, importProfile, resetProfile } = useProfileStore();
   const [message, setMessage] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [keySaved, setKeySaved] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('resume-builder-api-key');
-    if (saved) { setApiKey(saved); setKeySaved(true); }
-  }, []);
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('resume-builder-api-key') || '');
+  const [keySaved, setKeySaved] = useState(() => !!localStorage.getItem('resume-builder-api-key'));
 
   const handleSaveKey = () => {
     if (!apiKey.trim()) return;
