@@ -18,7 +18,7 @@ export default function AiScan() {
   const [fileList, setFileList] = useState<{ name: string; content: string }[]>([]);
   const [scanning, setScanning] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   useEffect(() => {
     if (scanning) {
