@@ -1,15 +1,16 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
 import Home from './pages/Home';
+import Profile from './pages/Profile';
+import Editor from './pages/Editor';
+import Settings from './pages/Settings';
 
 function PlaceholderPage({ title }: { title: string }) {
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
+    <div className="flex items-center justify-center py-20">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-[var(--color-primary-dark)] mb-2">{title}</h2>
         <p className="text-gray-400">开发中...</p>
-        <a href="/" className="text-[var(--color-primary)] mt-4 inline-block hover:underline">
-          ← 返回首页
-        </a>
       </div>
     </div>
   );
@@ -20,10 +21,12 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<PlaceholderPage title="经历管理" />} />
+        <Route element={<Layout />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/editor" element={<Editor />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
         <Route path="/jd" element={<PlaceholderPage title="JD 匹配" />} />
-        <Route path="/editor" element={<PlaceholderPage title="简历编辑" />} />
-        <Route path="/settings" element={<PlaceholderPage title="设置" />} />
       </Routes>
     </BrowserRouter>
   );
