@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useProfileStore } from '../../store/profileStore';
 import TagInput from '../common/TagInput';
 import type { Experience } from '../../types/profile';
+import AiVariantGenerator from './AiVariantGenerator';
 
 interface VariantEditorProps {
   experience: Experience;
@@ -10,6 +11,7 @@ interface VariantEditorProps {
 export default function VariantEditor({ experience }: VariantEditorProps) {
   const { addVariant, removeVariant } = useProfileStore();
   const [showForm, setShowForm] = useState(false);
+  const [showAiGenerator, setShowAiGenerator] = useState(false);
   const [label, setLabel] = useState('');
   const [description, setDescription] = useState('');
   const [keywords, setKeywords] = useState<string[]>([]);
@@ -33,12 +35,17 @@ export default function VariantEditor({ experience }: VariantEditorProps) {
     <div className="mt-4 pt-4 border-t border-gray-100">
       <div className="flex items-center justify-between mb-3">
         <h5 className="text-sm font-bold text-gray-600">经历变体（同一经历，不同侧重点）</h5>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="text-xs text-[var(--color-primary)] hover:underline"
-        >
-          + 添加变体
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="text-xs text-[var(--color-primary)] hover:underline"
+          >
+            + 添加变体
+          </button>
+          <button onClick={() => setShowAiGenerator(true)} className="text-xs text-[var(--color-primary)] hover:underline">
+            🤖 AI 生成
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -90,6 +97,10 @@ export default function VariantEditor({ experience }: VariantEditorProps) {
           </button>
         </div>
       ))}
+
+      {showAiGenerator && (
+        <AiVariantGenerator experience={experience} onClose={() => setShowAiGenerator(false)} />
+      )}
     </div>
   );
 }
