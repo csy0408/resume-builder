@@ -72,7 +72,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
     set((s) => {
       const profile = {
         ...s.profile,
-        experiences: [...s.profile.experiences, { ...exp, id: genId(), verified: false, variants: [] }],
+        experiences: [...s.profile.experiences, { ...exp, id: genId(), verified: false, variants: exp.variants || [] }],
       };
       persist(profile);
       return { profile };
