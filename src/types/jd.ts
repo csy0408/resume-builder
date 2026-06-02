@@ -11,22 +11,18 @@ export interface JdAnalysis {
   techStack: string[];
   requirements: JdRequirement[];
   summary: string;
-  rawText: string;
-}
-
-export interface MatchGap {
-  requirement: JdRequirement;
-  matched: boolean;
-  suggestion?: string;
 }
 
 export interface MatchResult {
   score: number;
-  matchedExperiences: Array<{
+  selectedExperiences: Array<{
     experienceId: string;
-    variantId: string;
+    variantId?: string;
     relevance: number;
   }>;
-  gaps: MatchGap[];
+  gaps: Array<{
+    keyword: string;
+    suggestion: string;
+  }>;
   suggestions: string[];
 }

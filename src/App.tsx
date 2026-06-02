@@ -5,6 +5,7 @@ import Profile from './pages/Profile';
 import AiScan from './pages/AiScan';
 import Editor from './pages/Editor';
 import Settings from './pages/Settings';
+import JDInput from './pages/JDInput';
 
 function PlaceholderPage({ title }: { title: string }) {
   return (
@@ -28,7 +29,7 @@ export default function App() {
           <Route path="/editor" element={<Editor />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
-        <Route path="/jd" element={<PlaceholderPage title="JD 匹配" />} />
+        <Route path="/jd" element={<JDInput />} />
       </Routes>
     </BrowserRouter>
   );
