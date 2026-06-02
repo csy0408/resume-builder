@@ -123,29 +123,34 @@ export default function AiScan() {
   };
 
   const handleImport = () => {
-    results.forEach((r, i) => {
-      if (checked.has(i)) {
-        addExperience({
-          id: '',
-          projectName: r.projectName,
-          role: r.role,
-          startDate: '',
-          endDate: '',
-          techStack: r.techStack,
-          baseDescription: r.baseDescription,
-          variants: r.variants?.map((v) => ({
+    try {
+      results.forEach((r, i) => {
+        if (checked.has(i)) {
+          addExperience({
             id: '',
-            label: v.label,
-            description: v.description,
-            keywords: v.keywords,
-            language: 'zh' as const,
-          })) || [],
-          source: 'ai-scan' as const,
-          verified: true,
-        } as Experience);
-      }
-    });
-    navigate('/profile');
+            projectName: r.projectName,
+            role: r.role,
+            startDate: '',
+            endDate: '',
+            techStack: r.techStack,
+            baseDescription: r.baseDescription,
+            variants: r.variants?.map((v) => ({
+              id: '',
+              label: v.label,
+              description: v.description,
+              keywords: v.keywords,
+              language: 'zh' as const,
+            })) || [],
+            source: 'ai-scan' as const,
+            verified: true,
+          } as Experience);
+        }
+      });
+      navigate('/profile');
+    } catch (e) {
+      console.error('Import error:', e);
+      alert('导入失败: ' + (e as Error).message);
+    }
   };
 
   return (
