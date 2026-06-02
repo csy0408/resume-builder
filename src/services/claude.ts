@@ -21,6 +21,8 @@ async function chat(system: string, user: string, maxTokens = 4096): Promise<str
   const key = getKey();
 
   if (engine === 'deepseek') {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 120000); // 2 min timeout
     const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
@@ -32,7 +34,9 @@ async function chat(system: string, user: string, maxTokens = 4096): Promise<str
           { role: 'user', content: user },
         ],
       }),
+      signal: controller.signal,
     });
+    clearTimeout(timer);
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: { message: res.statusText } }));
       throw new Error((err as { error?: { message?: string } }).error?.message || `HTTP ${res.status}`);
