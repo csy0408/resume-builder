@@ -1,5 +1,6 @@
 import { useProfileStore } from '../store/profileStore';
 import PhotoUpload from '../components/common/PhotoUpload';
+import ExperienceList from '../components/experience/ExperienceList';
 import type { BasicInfo } from '../types/profile';
 
 export default function Profile() {
@@ -44,17 +45,7 @@ export default function Profile() {
         </div>
       </section>
 
-      <section className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-[var(--color-primary-dark)]">项目经历</h3>
-          <button className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90">
-            + 添加经历
-          </button>
-        </div>
-        <div className="bg-white rounded-xl p-12 text-center text-gray-400 shadow-sm">
-          暂无经历，点击上方按钮添加
-        </div>
-      </section>
+      <ExperienceList />
     </div>
   );
 }
