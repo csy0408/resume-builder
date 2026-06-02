@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
+import { exportPdf } from '../services/export-pdf';
 import { useProfileStore } from '../store/profileStore';
 import { TEMPLATES, getTemplate, getTemplateConfig } from '../templates';
 import type { ResumeContent } from '../types/resume';
@@ -10,6 +11,13 @@ export default function Editor() {
     new Set(profile.experiences.map((e) => e.id)),
   );
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  const handleExportPdf = async () => {
+    if (!previewRef.current) return;
+    await exportPdf(previewRef.current, 'resume.pdf');
+  };
 
   const template = getTemplate(templateId);
   const config = getTemplateConfig(templateId);
@@ -68,6 +76,12 @@ export default function Editor() {
               </option>
             ))}
           </select>
+          <button
+            onClick={handleExportPdf}
+            className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90"
+          >
+            导出 PDF
+          </button>
         </div>
       </div>
 
@@ -112,7 +126,7 @@ export default function Editor() {
           </div>
         </aside>
 
-        <div className="flex-1 bg-white rounded-xl shadow-sm overflow-hidden">
+        <div ref={previewRef} className="flex-1 bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="scale-[0.85] origin-top-left w-[118%]">
             {template({ content: resumeContent, config })}
           </div>
