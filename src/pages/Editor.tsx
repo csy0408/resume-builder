@@ -2,6 +2,7 @@ import { useState, useMemo, useRef } from 'react';
 import { exportPdf } from '../services/export-pdf';
 import { useProfileStore } from '../store/profileStore';
 import { TEMPLATES, getTemplateConfig } from '../templates';
+import WritingAssistant from '../components/experience/WritingAssistant';
 import ClassicTemplate from '../templates/classic/ClassicTemplate';
 import ModernTemplate from '../templates/modern/ModernTemplate';
 import HybridTemplate from '../templates/hybrid/HybridTemplate';
@@ -34,6 +35,8 @@ export default function Editor() {
     new Set(profile.experiences.map((e) => e.id)),
   );
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [writingTarget, setWritingTarget] = useState('');
+  const [showWriting, setShowWriting] = useState(false);
 
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -99,6 +102,12 @@ export default function Editor() {
             ))}
           </select>
           <button
+            onClick={() => { setWritingTarget(''); setShowWriting(true); }}
+            className="px-3 py-2 border border-gray-200 text-sm rounded-lg hover:bg-gray-50"
+          >
+            写作助手
+          </button>
+          <button
             onClick={handleExportPdf}
             className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90"
           >
@@ -154,6 +163,16 @@ export default function Editor() {
           </div>
         </div>
       </div>
+
+      {showWriting && (
+        <WritingAssistant
+          initialText={writingTarget}
+          onApply={(_newText) => {
+            setShowWriting(false);
+          }}
+          onClose={() => setShowWriting(false)}
+        />
+      )}
     </div>
   );
 }
