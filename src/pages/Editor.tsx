@@ -1,8 +1,31 @@
 import { useState, useMemo, useRef } from 'react';
 import { exportPdf } from '../services/export-pdf';
 import { useProfileStore } from '../store/profileStore';
-import { TEMPLATES, getTemplate, getTemplateConfig } from '../templates';
-import type { ResumeContent } from '../types/resume';
+import { TEMPLATES, getTemplateConfig } from '../templates';
+import ClassicTemplate from '../templates/classic/ClassicTemplate';
+import ModernTemplate from '../templates/modern/ModernTemplate';
+import HybridTemplate from '../templates/hybrid/HybridTemplate';
+import type { ResumeContent, TemplateConfig, TemplateComponent } from '../types/resume';
+
+const TEMPLATE_MAP: Record<string, TemplateComponent> = {
+  classic: ClassicTemplate,
+  modern: ModernTemplate,
+  hybrid: HybridTemplate,
+};
+
+function TemplateRenderer({
+  templateId,
+  content,
+  config,
+}: {
+  templateId: string;
+  content: ResumeContent;
+  config: TemplateConfig;
+}) {
+  const Comp = TEMPLATE_MAP[templateId];
+  if (!Comp) return <div>模板加载失败</div>;
+  return <Comp content={content} config={config} />;
+}
 
 export default function Editor() {
   const { profile } = useProfileStore();
@@ -19,8 +42,7 @@ export default function Editor() {
     await exportPdf(previewRef.current, 'resume.pdf');
   };
 
-  const template = getTemplate(templateId);
-  const config = getTemplateConfig(templateId);
+  const config = useMemo(() => getTemplateConfig(templateId), [templateId]);
 
   const toggleExp = (id: string) => {
     setSelectedExps((prev) => {
@@ -58,7 +80,7 @@ export default function Editor() {
     [profile, selectedExps, selectedVariants],
   );
 
-  if (!template || !config) return <div>模板加载失败</div>;
+  if (!config) return <div>模板加载失败</div>;
 
   return (
     <div>
@@ -128,7 +150,7 @@ export default function Editor() {
 
         <div ref={previewRef} className="flex-1 bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="scale-[0.85] origin-top-left w-[118%]">
-            {template({ content: resumeContent, config })}
+            <TemplateRenderer templateId={templateId} content={resumeContent} config={config} />
           </div>
         </div>
       </div>

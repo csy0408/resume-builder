@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useProfileStore } from '../../store/profileStore';
 import TagInput from '../common/TagInput';
 import type { Experience } from '../../types/profile';
@@ -13,26 +13,13 @@ export default function ExperienceForm({ experience, onClose }: ExperienceFormPr
   const isEdit = !!experience;
 
   const [form, setForm] = useState({
-    projectName: '',
-    role: '',
-    startDate: '',
-    endDate: '',
-    techStack: [] as string[],
-    baseDescription: '',
+    projectName: experience?.projectName || '',
+    role: experience?.role || '',
+    startDate: experience?.startDate || '',
+    endDate: experience?.endDate || '',
+    techStack: experience?.techStack ? [...experience.techStack] : ([] as string[]),
+    baseDescription: experience?.baseDescription || '',
   });
-
-  useEffect(() => {
-    if (experience) {
-      setForm({
-        projectName: experience.projectName,
-        role: experience.role,
-        startDate: experience.startDate,
-        endDate: experience.endDate || '',
-        techStack: [...experience.techStack],
-        baseDescription: experience.baseDescription,
-      });
-    }
-  }, [experience]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
