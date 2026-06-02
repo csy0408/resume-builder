@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { scanProject } from '../services/claude';
+import { scanProject, parseResume } from '../services/claude';
 import { useProfileStore } from '../store/profileStore';
 import type { Experience } from '../types/profile';
 
@@ -20,6 +20,57 @@ export default function AiScan() {
   const [results, setResults] = useState<ScanResult[]>([]);
   const [checked, setChecked] = useState<Set<number>>(new Set());
   const [error, setError] = useState('');
+  const [mode, setMode] = useState<'scan' | 'resume'>('scan');
+  const [resumeText, setResumeText] = useState('');
+  const [parsing, setParsing] = useState(false);
+  const [parseResult, setParseResult] = useState<Awaited<ReturnType<typeof parseResume>> | null>(null);
+
+  const handleResumeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError('');
+
+    try {
+      let text = '';
+      if (file.name.endsWith('.pdf')) {
+        const pdfjsLib = await import('pdfjs-dist');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          text += content.items.map((item: { str?: string }) => item.str || '').join(' ') + '\n';
+        }
+      } else if (file.name.endsWith('.docx')) {
+        const mammoth = await import('mammoth');
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        text = result.value;
+      } else if (file.name.endsWith('.txt')) {
+        text = await file.text();
+      } else {
+        setError('不支持的文件格式，请上传 PDF、Word 或 TXT 文件');
+        return;
+      }
+      setResumeText(text);
+      setParseResult(null);
+    } catch (e) {
+      setError('文件读取失败: ' + (e as Error).message);
+    }
+  };
+
+  const handleParse = async () => {
+    if (!resumeText) { setError('请先上传简历文件'); return; }
+    setParsing(true); setError('');
+    try {
+      const r = await parseResume(resumeText);
+      setParseResult(r);
+    } catch (e) {
+      setError((e as Error).message);
+    }
+    setParsing(false);
+  };
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -87,12 +138,21 @@ export default function AiScan() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h2 className="text-xl font-bold text-[var(--color-primary-dark)] mb-2">AI 项目扫描</h2>
-      <p className="text-sm text-gray-400 mb-6">
-        选择项目中的关键文件（CLAUDE.md、package.json、源码等），AI 自动提取开发经历
-      </p>
+      <div className="flex items-center gap-4 mb-6">
+        <h2 className="text-xl font-bold text-[var(--color-primary-dark)]">
+          <button onClick={() => setMode('scan')} className={mode === 'scan' ? '' : 'text-gray-300 hover:text-gray-500'}>AI 项目扫描</button>
+          <span className="mx-2 text-gray-300">|</span>
+          <button onClick={() => setMode('resume')} className={mode === 'resume' ? '' : 'text-gray-300 hover:text-gray-500'}>上传简历解析</button>
+        </h2>
+      </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
+      {mode === 'scan' && (
+        <div>
+          <p className="text-sm text-gray-400 mb-6">
+            选择项目中的关键文件（CLAUDE.md、package.json、源码等），AI 自动提取开发经历
+          </p>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
         <label className="block mb-3">
           <span className="text-sm font-medium text-gray-600">选择项目文件</span>
           <input
@@ -188,6 +248,58 @@ export default function AiScan() {
           >
             导入选中的经历 ({checked.size} 条)
           </button>
+        </div>
+      )}
+        </div>
+      )}
+
+      {mode === 'resume' && (
+        <div>
+          <p className="text-sm text-gray-400 mb-6">上传已有的简历文件（PDF/Word/TXT），AI 自动提取信息并填充到 Profile</p>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
+            <input type="file" accept=".pdf,.docx,.txt" onChange={handleResumeFile} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-[var(--color-bg)] file:text-[var(--color-primary)]" />
+
+            {resumeText && (
+              <div className="mt-4">
+                <button onClick={handleParse} disabled={parsing} className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90 disabled:opacity-50">
+                  {parsing ? 'AI 解析中...' : '🤖 开始解析'}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {parseResult && (
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h3 className="text-lg font-bold text-[var(--color-primary-dark)] mb-4">解析结果</h3>
+              <div className="space-y-4 text-sm">
+                <div>
+                  <h4 className="font-bold text-gray-500 mb-1">基本信息</h4>
+                  <p>姓名：{parseResult.basic.name} | 电话：{parseResult.basic.phone} | 邮箱：{parseResult.basic.email} | 地点：{parseResult.basic.location}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-500 mb-1">教育 ({parseResult.education.length})</h4>
+                  {parseResult.education.map((edu, i) => (
+                    <p key={i}>{edu.school} · {edu.major} · {edu.degree} ({edu.startDate} - {edu.endDate || '至今'})</p>
+                  ))}
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-500 mb-1">经历 ({parseResult.experiences.length})</h4>
+                  {parseResult.experiences.map((exp, i) => (
+                    <div key={i} className="mb-2">
+                      <p className="font-medium">{exp.projectName} — {exp.role} ({exp.startDate} - {exp.endDate || '至今'})</p>
+                      <p className="text-xs text-gray-400">技术栈：{exp.techStack.join(', ')}</p>
+                      <p className="text-xs text-gray-500 mt-1">{exp.baseDescription}</p>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-500 mb-1">技能 ({parseResult.skills.length})</h4>
+                  <p>{parseResult.skills.map(s => s.name).join(', ')}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
