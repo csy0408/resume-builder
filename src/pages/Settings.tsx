@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProfileStore } from '../store/profileStore';
 import { exportAsJson, importFromJson } from '../utils/storage';
 import type { UserProfile } from '../types/profile';
@@ -6,6 +6,25 @@ import type { UserProfile } from '../types/profile';
 export default function Settings() {
   const { profile, importProfile, resetProfile } = useProfileStore();
   const [message, setMessage] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [keySaved, setKeySaved] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('resume-builder-api-key');
+    if (saved) { setApiKey(saved); setKeySaved(true); }
+  }, []);
+
+  const handleSaveKey = () => {
+    if (!apiKey.trim()) return;
+    localStorage.setItem('resume-builder-api-key', apiKey.trim());
+    setKeySaved(true);
+  };
+
+  const handleClearKey = () => {
+    localStorage.removeItem('resume-builder-api-key');
+    setApiKey('');
+    setKeySaved(false);
+  };
 
   const handleExport = () => {
     exportAsJson(profile, `resume-profile-${new Date().toISOString().slice(0, 10)}.json`);
@@ -32,6 +51,31 @@ export default function Settings() {
   return (
     <div className="max-w-2xl">
       <h2 className="text-xl font-bold text-[var(--color-primary-dark)] mb-6">设置</h2>
+
+      <section className="bg-white rounded-xl p-6 shadow-sm mb-6">
+        <h3 className="text-lg font-bold text-[var(--color-primary-dark)] mb-4">Claude API Key</h3>
+        <p className="text-xs text-gray-400 mb-3">
+          用于 AI 功能（项目扫描、JD 匹配、简历解析）。Key 仅保存在浏览器本地，不会上传。
+        </p>
+        <div className="flex gap-3">
+          <input
+            type="password"
+            value={apiKey}
+            onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
+            placeholder="sk-ant-api03-..."
+            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+          />
+          <button onClick={handleSaveKey} className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:opacity-90">
+            保存
+          </button>
+          {keySaved && (
+            <button onClick={handleClearKey} className="px-4 py-2 border border-red-200 text-red-500 text-sm rounded-lg hover:bg-red-50">
+              清除
+            </button>
+          )}
+        </div>
+        {keySaved && <p className="text-xs text-green-500 mt-2">✅ API Key 已保存</p>}
+      </section>
 
       <section className="bg-white rounded-xl p-6 shadow-sm mb-6">
         <h3 className="text-lg font-bold text-[var(--color-primary-dark)] mb-4">数据管理</h3>
